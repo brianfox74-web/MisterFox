@@ -286,6 +286,7 @@
       pointer-events: none;
       user-select: none;
       line-height: 1;
+      display: none;
     }
 
     .contact-inner {
@@ -469,6 +470,8 @@
     /* ── Tablet 640px+ ── */
     @media (min-width: 640px) {
       :root { --pad: 2rem; }
+
+      .contact-section::after { display: block; }
 
       .hero-avatar {
         width: 180px;
