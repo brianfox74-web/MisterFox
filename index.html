@@ -269,6 +269,84 @@
       font-style: normal;
     }
 
+    /* ── Music Section ── */
+    .music-section {
+      padding: 4rem var(--pad);
+      position: relative;
+    }
+
+    .music-inner {
+      max-width: 860px;
+    }
+
+    .music-heading {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.8rem, 10vw, 4.5rem);
+      line-height: 0.95;
+      margin-bottom: 2rem;
+      color: var(--fg);
+    }
+
+    .music-body {
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      font-size: 0.95rem;
+      line-height: 1.9;
+      color: var(--fg-dim);
+      border-left: 2px solid var(--gold);
+      padding-left: 1.25rem;
+      margin-bottom: 3rem;
+      max-width: 640px;
+    }
+
+    .music-genres {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1px;
+      background: var(--rule);
+      border: 1px solid var(--rule);
+    }
+
+    .genre-card {
+      background: var(--bg);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .genre-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      color: var(--fg);
+      line-height: 1;
+    }
+
+    .genre-desc {
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      font-size: 0.8rem;
+      color: var(--fg-dim);
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    .genre-player-placeholder {
+      margin-top: 1rem;
+      border: 1px dashed var(--rule);
+      padding: 1.25rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .genre-player-placeholder span {
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      color: var(--gold-dim);
+      font-style: italic;
+    }
+
     /* ── Contact Section ── */
     .contact-section {
       padding: 4rem var(--pad);
@@ -475,6 +553,8 @@
 
       .contact-section::after { display: block; }
 
+      .music-genres { grid-template-columns: 1fr 1fr; }
+
       .hero-avatar {
         width: 180px;
         height: 180px;
@@ -534,6 +614,7 @@
 
       .contact-section { padding: 6rem var(--pad); }
       .about-section   { padding: 6rem var(--pad); }
+      .music-section   { padding: 6rem var(--pad); }
     }
   </style>
 </head>
@@ -602,6 +683,61 @@
 
   <div class="rule"></div>
 
+  <!-- Music -->
+  <section class="music-section" id="music">
+    <div class="music-inner">
+
+      <p class="section-label">The Sound</p>
+      <h2 class="music-heading">No Limits.<br>No Rules.</h2>
+
+      <p class="music-body">
+        MisterFox has spent decades building one of the most eclectic record collections 
+        around. Hip hop, drum and bass, neo soul, jazz, funk, breaks, house — the list 
+        doesn't stop there. Where most DJs stay in their lane, MisterFox treats genre 
+        boundaries as a challenge. His sets move fluidly across styles, finding the thread 
+        that connects a soul record from the 70s to a drum and bass cut from the 90s to 
+        something brand new — all mixed seamlessly with turntablist precision.
+        <br><br>
+        The belief is simple: if you understand music deeply enough, you can mix anything 
+        with anything. Every set is a different conversation.
+      </p>
+
+      <div class="music-genres">
+        <div class="genre-card">
+          <h3 class="genre-title">Hip Hop</h3>
+          <p class="genre-desc">Old school to new school. Beats, bars and culture.</p>
+          <div class="genre-player-placeholder">
+            <span>// mix coming soon</span>
+          </div>
+        </div>
+        <div class="genre-card">
+          <h3 class="genre-title">Drum &amp; Bass</h3>
+          <p class="genre-desc">Liquid to neuro. Rollers to jump-up. All of it.</p>
+          <div class="genre-player-placeholder">
+            <span>// mix coming soon</span>
+          </div>
+        </div>
+        <div class="genre-card">
+          <h3 class="genre-title">Neo Soul</h3>
+          <p class="genre-desc">Deep grooves, warm tones, soulful selections.</p>
+          <div class="genre-player-placeholder">
+            <span>// mix coming soon</span>
+          </div>
+        </div>
+        <div class="genre-card">
+          <h3 class="genre-title">Turntablism</h3>
+          <p class="genre-desc">Scratching, blending, cutting. The art of the decks.</p>
+          <div class="genre-player-placeholder">
+            <span>// mix coming soon</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="rule"></div>
+
   <!-- Contact & Booking -->
   <section class="contact-section" id="contact">
     <div class="contact-inner">
@@ -645,17 +781,20 @@
 
   <script>
     // Stick h1 to top, then scale down as user scrolls further
-    const heroName = document.querySelector('.hero-name');
+    const heroName          = document.querySelector('.hero-name');
+    const heroPlaceholder   = document.querySelector('.hero-name-placeholder');
 
     let heroNameTop  = 0;
     let heroNameLeft = 0;
-    let baseFontSize = 0; // natural font-size in px at time of snapshot
+    let baseFontSize = 0;
+    let baseHeight   = 0;
 
     function snapshot() {
       const rect   = heroName.getBoundingClientRect();
       heroNameTop  = rect.top + window.scrollY;
       heroNameLeft = rect.left;
       baseFontSize = parseFloat(getComputedStyle(heroName).fontSize);
+      baseHeight   = rect.height;
     }
 
     function onScroll() {
@@ -679,6 +818,10 @@
         heroName.style.webkitBackdropFilter = 'blur(16px)';
         heroName.style.fontSize             = (baseFontSize * scale) + 'px';
         heroName.style.transform            = '';
+
+        // Reserve the space the h1 vacated
+        heroPlaceholder.style.display = 'block';
+        heroPlaceholder.style.height  = baseHeight + 'px';
       } else {
         heroName.style.position             = '';
         heroName.style.top                  = '';
@@ -693,6 +836,9 @@
         heroName.style.webkitBackdropFilter = '';
         heroName.style.fontSize             = '';
         heroName.style.transform            = '';
+
+        heroPlaceholder.style.display = 'none';
+        heroPlaceholder.style.height  = '0';
       }
     }
 
