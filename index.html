@@ -637,6 +637,64 @@
   </footer>
 
   <script>
+    // Stick h1 to top, then scale down as user scrolls further
+    const heroName = document.querySelector('.hero-name');
+
+    let heroNameTop  = 0;
+    let heroNameLeft = 0;
+    let baseFontSize = 0; // natural font-size in px at time of snapshot
+
+    function snapshot() {
+      const rect   = heroName.getBoundingClientRect();
+      heroNameTop  = rect.top + window.scrollY;
+      heroNameLeft = rect.left;
+      baseFontSize = parseFloat(getComputedStyle(heroName).fontSize);
+    }
+
+    function onScroll() {
+      if (window.scrollY >= heroNameTop) {
+        const scrolledPast = window.scrollY - heroNameTop;
+        const progress     = Math.min(scrolledPast / 300, 1);
+        const scale        = 1 - (0.5 * progress);
+        const targetX      = parseFloat(getComputedStyle(document.documentElement).fontSize) * 1.25;
+        const currentX     = heroNameLeft - (heroNameLeft - targetX) * progress;
+
+        heroName.style.position             = 'fixed';
+        heroName.style.top                  = '0';
+        heroName.style.left                 = '0';
+        heroName.style.width                = '100%';
+        heroName.style.paddingLeft          = currentX + 'px';
+        heroName.style.zIndex               = '200';
+        heroName.style.paddingTop           = '0.6rem';
+        heroName.style.paddingBottom        = '0.6rem';
+        heroName.style.background           = 'rgba(8,7,6,0.5)';
+        heroName.style.backdropFilter       = 'blur(16px)';
+        heroName.style.webkitBackdropFilter = 'blur(16px)';
+        heroName.style.fontSize             = (baseFontSize * scale) + 'px';
+        heroName.style.transform            = '';
+      } else {
+        heroName.style.position             = '';
+        heroName.style.top                  = '';
+        heroName.style.left                 = '';
+        heroName.style.width                = '';
+        heroName.style.paddingLeft          = '';
+        heroName.style.zIndex               = '';
+        heroName.style.paddingTop           = '';
+        heroName.style.paddingBottom        = '';
+        heroName.style.background           = '';
+        heroName.style.backdropFilter       = '';
+        heroName.style.webkitBackdropFilter = '';
+        heroName.style.fontSize             = '';
+        heroName.style.transform            = '';
+      }
+    }
+
+    document.fonts.ready.then(() => {
+      snapshot();
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+    });
+
     // Rings expand on scroll
     const rings  = document.getElementById('heroRings');
     const heroEl = document.querySelector('.hero');
